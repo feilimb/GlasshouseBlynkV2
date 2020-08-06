@@ -1,12 +1,12 @@
 #define BLYNK_PRINT Serial
 
-#include <BlynkSimpleEsp32.h>
-#include <WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <ESP8266WiFi.h>
 #include <ArduinoOTA.h>
 
 char ssid[] = "...";
 char pass[] = "...";
-char blynk_auth[] = "...";
+char blynk_auth[] = "...";  // esp_8266
 
 uint count = 0;
 
@@ -15,6 +15,7 @@ int level_2 = 14;
 int level_3 = 15;
 int level_4 = 13;
 int relayPin = 12;
+int ledPin = 16;
 
 int switchState1, switchState2, switchState3, switchState4;
 
@@ -102,7 +103,9 @@ void setup()
   pinMode(level_3, INPUT);
   pinMode(level_4, INPUT);
   pinMode(relayPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
   digitalWrite(relayPin, LOW);
+  digitalWrite(ledPin, HIGH);
   
   Serial.begin(115200);
 
@@ -119,11 +122,14 @@ void setup()
   Serial.println("");
   Serial.println("WiFi connected");
 
+  // indicate WiFi connection obtained
+  digitalWrite(ledPin, LOW);  // LOW actually turns on LED on my board
+
   // ===== BLYNK Initialisation =====
   Blynk.begin(blynk_auth, ssid, pass);
 
   // ===== ArduinoOTA Initialisation =====
-  /*ArduinoOTA.setHostname("GlasshouseBlynk");
+  ArduinoOTA.setHostname("GlasshouseBlynk");
   ArduinoOTA.onStart([]() {
       String type;
       if (ArduinoOTA.getCommand() == U_FLASH)
@@ -148,7 +154,7 @@ void setup()
     else if (error == OTA_RECEIVE_ERROR) Serial.println(">> ArduinoOTA Receive Failed");
     else if (error == OTA_END_ERROR) Serial.println(">> ArduinoOTA End Failed");
   });
-  ArduinoOTA.begin();*/
+  ArduinoOTA.begin();
 
   // setup our blynk timer function
   timerID = timer.setInterval(pollingPeriodSeconds * 1000, sendSensorData);
@@ -160,5 +166,5 @@ void loop()
   Blynk.run();
   timer.run();
   timer2.run();
-  //ArduinoOTA.handle();
+  ArduinoOTA.handle();
 }

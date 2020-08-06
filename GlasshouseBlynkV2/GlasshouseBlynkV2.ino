@@ -6,8 +6,8 @@
 
 char ssid[] = "...";
 char pass[] = "...";
+char blynk_auth[] = "...";
 
-char auth[] = "QqMFp5bzmSpi_rfB7t0otRz9DvGhF4Ln";
 uint count = 0;
 
 int level_1 = 2;
@@ -120,7 +120,7 @@ void setup()
   Serial.println("WiFi connected");
 
   // ===== BLYNK Initialisation =====
-  Blynk.begin(auth, ssid, pass);
+  Blynk.begin(blynk_auth, ssid, pass);
 
   // ===== ArduinoOTA Initialisation =====
   /*ArduinoOTA.setHostname("GlasshouseBlynk");
